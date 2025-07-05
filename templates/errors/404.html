@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}صفحه یافت نشد - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-primary">404</h1>
+                <h2 class="mb-4">صفحه یافت نشد</h2>
+                <p class="lead text-muted mb-4">متأسفانه صفحه‌ای که دنبال آن می‌گردید وجود ندارد.</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> صفحه اصلی
+                    </a>
+                    <button onclick="history.back()" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-right"></i> بازگشت
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    padding: 3rem 0;
+}
+.display-1 {
+    font-size: 8rem;
+    font-weight: 700;
+    opacity: 0.3;
+}
+</style>
+{% endblock %}

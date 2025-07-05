@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}خدمات - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6 fw-bold text-primary mb-4">
+                <i class="fas fa-list"></i> خدمات موجود
+            </h1>
+        </div>
+    </div>
+    
+    {% if services %}
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow hover-shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title text-primary">{{ service.name }}</h5>
+                            {% if service.category == 'administrative' %}
+                                <span class="badge bg-primary">اداری</span>
+                            {% elif service.category == 'educational' %}
+                                <span class="badge bg-success">آموزشی</span>
+                            {% elif service.category == 'financial' %}
+                                <span class="badge bg-warning">مالی</span>
+                            {% elif service.category == 'inquiry' %}
+                                <span class="badge bg-info">استعلام</span>
+                            {% else %}
+                                <span class="badge bg-secondary">سایر</span>
+                            {% endif %}
+                        </div>
+                        
+                        <p class="card-text">{{ service.description }}</p>
+                        
+                        <!-- Price Breakdown -->
+                        <div class="price-breakdown border rounded p-3 mb-3 bg-light">
+                            <h6 class="text-primary mb-2">تفکیک قیمت:</h6>
+                            
+                            <div class="row g-2 small">
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span>قیمت پایه:</span>
+                                        <span>{{ "{:,.0f}".format(service.base_price) }} تومان</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between text-success">
+                                        <span>تخفیف شما (10%):</span>
+                                        <span>-{{ "{:,.0f}".format(service.base_price * 0.1) }} تومان</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between text-warning">
+                                        <span>پورسانت معرف (10%):</span>
+                                        <span>{{ "{:,.0f}".format(service.base_price * 0.1) }} تومان</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between text-info">
+                                        <span>امور اجتماعی (30%):</span>
+                                        <span>{{ "{:,.0f}".format(service.base_price * 0.3) }} تومان</span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between text-primary">
+                                        <span>تیم کافی‌نت (50%):</span>
+                                        <span>{{ "{:,.0f}".format(service.base_price * 0.5) }} تومان</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-2">
+                            
+                            <div class="d-flex justify-content-between fw-bold text-success">
+                                <span>مبلغ قابل پرداخت شما:</span>
+                                <span>{{ "{:,.0f}".format(service.base_price * 0.9) }} تومان</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <a href="{{ url_for('create_order', service_id=service.id) }}" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart"></i> سفارش این خدمت
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-exclamation-circle fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">هیچ خدمتی موجود نیست</h4>
+            <p class="text-muted">در حال حاضر هیچ خدمتی برای سفارش موجود نیست.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

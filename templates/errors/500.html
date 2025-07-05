@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}خطای سرور - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-danger">500</h1>
+                <h2 class="mb-4">خطای سرور</h2>
+                <p class="lead text-muted mb-4">متأسفانه مشکلی در سرور رخ داده است. لطفاً بعداً تلاش کنید.</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> صفحه اصلی
+                    </a>
+                    <button onclick="location.reload()" class="btn btn-outline-primary">
+                        <i class="fas fa-redo"></i> تلاش مجدد
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    padding: 3rem 0;
+}
+.display-1 {
+    font-size: 8rem;
+    font-weight: 700;
+    opacity: 0.3;
+}
+</style>
+{% endblock %}

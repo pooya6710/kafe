@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% set page_title = "ثبت‌نام" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row min-vh-100">
+        <!-- Left side - Registration form -->
+        <div class="col-lg-6 d-flex align-items-center">
+            <div class="w-100 px-4 px-lg-5">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-primary mb-3">عضویت در کافی‌نت مجازی</h1>
+                    <p class="text-muted">به خانواده بزرگ ما بپیوندید</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Basic Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0"><i class="fas fa-user me-2"></i>اطلاعات پایه</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.username.label(class="form-label fw-bold") }}
+                                    {{ form.username(class="form-control", placeholder="نام کاربری", required=true) }}
+                                    <div class="invalid-feedback">لطفاً نام کاربری معتبر وارد کنید.</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.email.label(class="form-label fw-bold") }}
+                                    {{ form.email(class="form-control", placeholder="ایمیل", required=true) }}
+                                    <div class="invalid-feedback">لطفاً ایمیل معتبر وارد کنید.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.full_name.label(class="form-label fw-bold") }}
+                                {{ form.full_name(class="form-control", placeholder="نام و نام خانوادگی", required=true) }}
+                                <div class="invalid-feedback">لطفاً نام کامل خود را وارد کنید.</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.phone.label(class="form-label fw-bold") }}
+                                    {{ form.phone(class="form-control", placeholder="09123456789", maxlength="11") }}
+                                    <div class="form-text">مثال: 09123456789 یا 02112345678</div>
+                                    <div class="invalid-feedback">شماره تلفن معتبر وارد کنید</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.national_id.label(class="form-label fw-bold") }}
+                                    {{ form.national_id(class="form-control", placeholder="1234567890", maxlength="10") }}
+                                    <div class="form-text">کد ملی 10 رقمی</div>
+                                    <div class="invalid-feedback">کد ملی معتبر وارد کنید</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0"><i class="fas fa-lock me-2"></i>رمز عبور</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.password.label(class="form-label fw-bold") }}
+                                    {{ form.password(class="form-control", placeholder="رمز عبور", required=true) }}
+                                    <div class="form-text">حداقل ۶ کاراکتر</div>
+                                    <div class="invalid-feedback">رمز عبور باید حداقل ۶ کاراکتر باشد.</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.confirm_password.label(class="form-label fw-bold") }}
+                                    {{ form.confirm_password(class="form-control", placeholder="تکرار رمز عبور", required=true) }}
+                                    <div class="invalid-feedback">رمزهای عبور یکسان نیستند.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0"><i class="fas fa-gift me-2"></i>اطلاعات اختیاری</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.referrer_username.label(class="form-label fw-bold") }}
+                                    {{ form.referrer_username(class="form-control", placeholder="نام کاربری معرف") }}
+                                    <div class="form-text">اگر کسی شما را معرفی کرده، نام کاربری او را وارد کنید</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.discount_code.label(class="form-label fw-bold") }}
+                                    {{ form.discount_code(class="form-control", placeholder="کد تخفیف") }}
+                                    <div class="form-text">کد تخفیف سازمانی یا شخص خاص</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>ثبت‌نام
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        قبلاً عضو هستید؟ 
+                        <a href="{{ url_for('login') }}" class="text-primary text-decoration-none">ورود</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side - Information and benefits -->
+        <div class="col-lg-6 bg-primary text-white d-flex align-items-center">
+            <div class="w-100 px-4 px-lg-5">
+                <div class="text-center mb-5">
+                    <h2 class="display-6 fw-bold mb-4">چرا کافی‌نت مجازی؟</h2>
+                    <p class="lead opacity-75">با عضویت در کافی‌نت مجازی از مزایای منحصر به فرد استفاده کنید</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-percentage fs-3"></i>
+                            </div>
+                            <h5>تخفیف ۱۰٪</h5>
+                            <p class="small opacity-75">تخفیف خودکار روی همه خدمات</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-users fs-3"></i>
+                            </div>
+                            <h5>سیستم معرفی</h5>
+                            <p class="small opacity-75">کسب درآمد از معرفی دوستان</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-shield-alt fs-3"></i>
+                            </div>
+                            <h5>امنیت بالا</h5>
+                            <p class="small opacity-75">محافظت کامل از اطلاعات شخصی</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-white bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-heart fs-3"></i>
+                            </div>
+                            <h5>مسئولیت اجتماعی</h5>
+                            <p class="small opacity-75">مشارکت در فعالیت‌های خیریه</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white bg-opacity-10 rounded p-4 mt-5">
+                    <h6 class="fw-bold mb-3">شفافیت کامل قیمت‌گذاری</h6>
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <small class="d-block">تخفیف کاربر</small>
+                            <strong class="text-warning">۱۰٪</strong>
+                        </div>
+                        <div class="col-3">
+                            <small class="d-block">پورسانت معرف</small>
+                            <strong class="text-success">۱۰٪</strong>
+                        </div>
+                        <div class="col-3">
+                            <small class="d-block">فعالیت‌های اجتماعی</small>
+                            <strong class="text-info">۳۰٪</strong>
+                        </div>
+                        <div class="col-3">
+                            <small class="d-block">تیم</small>
+                            <strong class="text-light">۵۰٪</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Password confirmation validation
+document.getElementById('confirm_password').addEventListener('input', function() {
+    var password = document.getElementById('password').value;
+    var confirmPassword = this.value;
+    
+    if (password !== confirmPassword) {
+        this.setCustomValidity('رمزهای عبور یکسان نیستند');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+
+// Phone number validation and formatting
+document.getElementById('phone').addEventListener('input', function() {
+    var phone = this.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Limit to 11 digits
+    if (phone.length > 11) {
+        phone = phone.substring(0, 11);
+    }
+    
+    // Auto-add leading zero for mobile numbers
+    if (phone.length === 10 && phone.startsWith('9')) {
+        phone = '0' + phone;
+    }
+    
+    this.value = phone;
+    
+    // Validate
+    if (phone.length === 0) {
+        this.setCustomValidity('');
+    } else if (phone.length === 11) {
+        if (phone.match(/^09[0-9]{9}$/)) {
+            this.setCustomValidity('');
+        } else if (phone.match(/^0[1-9][0-9]{9}$/)) {
+            this.setCustomValidity('');
+        } else {
+            this.setCustomValidity('شماره تلفن معتبر نیست');
+        }
+    } else {
+        this.setCustomValidity('شماره تلفن باید 11 رقم باشد');
+    }
+});
+
+// National ID validation and formatting
+document.getElementById('national_id').addEventListener('input', function() {
+    var nationalId = this.value.replace(/\D/g, ''); // Remove non-digits
+    
+    // Limit to 10 digits
+    if (nationalId.length > 10) {
+        nationalId = nationalId.substring(0, 10);
+    }
+    
+    this.value = nationalId;
+    
+    // Validate
+    if (nationalId.length === 0) {
+        this.setCustomValidity('');
+    } else if (nationalId.length === 10) {
+        // Check for repeated digits
+        if (new Set(nationalId).size === 1) {
+            this.setCustomValidity('کد ملی معتبر نیست');
+            return;
+        }
+        
+        // Check digit validation
+        var check = 0;
+        for (var i = 0; i < 9; i++) {
+            check += parseInt(nationalId[i]) * (10 - i);
+        }
+        check = check % 11;
+        var checkDigit = parseInt(nationalId[9]);
+        
+        if (check < 2) {
+            if (checkDigit === check) {
+                this.setCustomValidity('');
+            } else {
+                this.setCustomValidity('کد ملی معتبر نیست');
+            }
+        } else {
+            if (checkDigit === 11 - check) {
+                this.setCustomValidity('');
+            } else {
+                this.setCustomValidity('کد ملی معتبر نیست');
+            }
+        }
+    } else {
+        this.setCustomValidity('کد ملی باید 10 رقم باشد');
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}ثبت سفارش - {{ service.name }} - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-shopping-cart"></i> ثبت سفارش: {{ service.name }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Service Details -->
+                    <div class="mb-4">
+                        <h5 class="text-primary">توضیحات خدمت:</h5>
+                        <p>{{ service.description }}</p>
+                    </div>
+                    
+                    <!-- Price Breakdown -->
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-calculator"></i> محاسبه شفاف قیمت
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between">
+                                    <span>قیمت پایه خدمت:</span>
+                                    <strong>{{ "{:,.0f}".format(service.base_price) }} تومان</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between text-success">
+                                    <span>10% تخفیف برای شما:</span>
+                                    <strong>-{{ "{:,.0f}".format(service.base_price * 0.1) }} تومان</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="row g-3 small">
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <div class="text-warning">
+                                        <i class="fas fa-users"></i>
+                                        <strong>10% پورسانت معرف</strong>
+                                    </div>
+                                    <span>{{ "{:,.0f}".format(service.base_price * 0.1) }} تومان</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <div class="text-info">
+                                        <i class="fas fa-heart"></i>
+                                        <strong>30% امور اجتماعی</strong>
+                                    </div>
+                                    <span>{{ "{:,.0f}".format(service.base_price * 0.3) }} تومان</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <div class="text-primary">
+                                        <i class="fas fa-laptop"></i>
+                                        <strong>50% تیم کافی‌نت</strong>
+                                    </div>
+                                    <span>{{ "{:,.0f}".format(service.base_price * 0.5) }} تومان</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="text-center">
+                            <h4 class="text-success mb-0">
+                                مبلغ قابل پرداخت شما: {{ "{:,.0f}".format(service.base_price * 0.9) }} تومان
+                            </h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Form -->
+                    <form method="POST" id="orderForm">
+                        <input type="hidden" name="service_id" value="{{ service.id }}">
+                        <input type="hidden" name="order_data" id="orderData" value="{}">
+                        
+                        {% if service.required_fields %}
+                            {% set fields = service.required_fields|from_json %}
+                            {% if fields %}
+                                <div class="mb-4">
+                                    <h6 class="text-primary">اطلاعات مورد نیاز:</h6>
+                                    <div class="row g-3">
+                                        {% for field in fields %}
+                                        <div class="col-md-6">
+                                            <label class="form-label">{{ field }}</label>
+                                            <input type="text" class="form-control required-field" name="field_{{ loop.index0 }}" required>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label">توضیحات اضافی (اختیاری):</label>
+                            <textarea class="form-control" name="additional_notes" rows="3" placeholder="اگر توضیح خاصی دارید اینجا بنویسید..."></textarea>
+                        </div>
+                        
+                        <!-- Terms -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                                <label class="form-check-label" for="acceptTerms">
+                                    با <a href="#" class="text-primary">قوانین و مقررات</a> موافقم و تأیید می‌کنم که اطلاعات وارد شده صحیح است.
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-success btn-lg flex-fill">
+                                <i class="fas fa-check"></i> تأیید و ثبت سفارش
+                            </button>
+                            <a href="{{ url_for('user_services') }}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-right"></i> بازگشت
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    // Collect form data
+    const formData = new FormData(this);
+    const orderData = {};
+    
+    // Add service-specific fields
+    const requiredFields = document.querySelectorAll('.required-field');
+    requiredFields.forEach((field, index) => {
+        orderData[`field_${index}`] = field.value;
+    });
+    
+    // Add additional notes
+    if (formData.get('additional_notes')) {
+        orderData['additional_notes'] = formData.get('additional_notes');
+    }
+    
+    // Add timestamp
+    orderData['order_time'] = new Date().toISOString();
+    
+    // Set the order data
+    document.getElementById('orderData').value = JSON.stringify(orderData);
+});
+</script>
+{% endblock %}

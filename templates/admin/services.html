@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}مدیریت خدمات - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6 fw-bold text-primary mb-4">
+                <i class="fas fa-cogs"></i> مدیریت خدمات
+            </h1>
+        </div>
+    </div>
+    
+    <!-- Add Service Form -->
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-plus"></i> افزودن خدمت جدید
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.name.label(class="form-label") }}
+                                    {{ form.name(class="form-control") }}
+                                    {% if form.name.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.name.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.category.label(class="form-label") }}
+                                    {{ form.category(class="form-select") }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="3") }}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.base_price.label(class="form-label") }}
+                                    {{ form.base_price(class="form-control") }}
+                                    {% if form.base_price.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.base_price.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check mt-4">
+                                        {{ form.is_active(class="form-check-input") }}
+                                        {{ form.is_active.label(class="form-check-label") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.required_fields.label(class="form-label") }}
+                            {{ form.required_fields(class="form-control", rows="3") }}
+                            <small class="form-text text-muted">
+                                فیلدهای مورد نیاز را به صورت JSON وارد کنید. مثال: ["نام", "کد ملی", "شماره تماس"]
+                            </small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> ایجاد خدمت
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Price Breakdown Info -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow bg-light">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i> تقسیم‌بندی قیمت
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="small mb-2">برای هر خدمت، قیمت به صورت زیر تقسیم می‌شود:</p>
+                    <ul class="list-unstyled small">
+                        <li><strong class="text-success">10%</strong> تخفیف برای کاربر</li>
+                        <li><strong class="text-warning">10%</strong> پورسانت برای معرف</li>
+                        <li><strong class="text-info">30%</strong> امور اجتماعی</li>
+                        <li><strong class="text-primary">50%</strong> تیم کافی‌نت</li>
+                    </ul>
+                    <hr>
+                    <p class="small mb-0">
+                        <strong>مثال:</strong> برای خدمت ۱۰۰،۰۰۰ تومانی:
+                        <br>کاربر: ۹۰،۰۰۰ تومان پرداخت می‌کند
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Services List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list text-primary"></i> لیست خدمات
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if services %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>نام خدمت</th>
+                                        <th>دسته‌بندی</th>
+                                        <th>قیمت پایه</th>
+                                        <th>قیمت کاربر</th>
+                                        <th>وضعیت</th>
+                                        <th>تاریخ ایجاد</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for service in services %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ service.name }}</strong>
+                                            {% if service.description %}
+                                                <br>
+                                                <small class="text-muted">{{ service.description[:50] }}{% if service.description|length > 50 %}...{% endif %}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if service.category == 'administrative' %}
+                                                <span class="badge bg-primary">خدمات اداری</span>
+                                            {% elif service.category == 'educational' %}
+                                                <span class="badge bg-success">خدمات آموزشی</span>
+                                            {% elif service.category == 'financial' %}
+                                                <span class="badge bg-warning">خدمات مالی</span>
+                                            {% elif service.category == 'inquiry' %}
+                                                <span class="badge bg-info">استعلامات</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">سایر</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ "{:,.0f}".format(service.base_price) }} تومان</td>
+                                        <td class="text-success fw-bold">{{ "{:,.0f}".format(service.base_price * 0.9) }} تومان</td>
+                                        <td>
+                                            {% if service.is_active %}
+                                                <span class="badge bg-success">فعال</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">غیرفعال</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ service.created_at.strftime('%Y/%m/%d') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-cogs fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">هنوز هیچ خدمتی تعریف نشده است</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

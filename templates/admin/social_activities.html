@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}فعالیت‌های اجتماعی - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6 fw-bold text-primary mb-4">
+                <i class="fas fa-heart"></i> مدیریت فعالیت‌های اجتماعی
+            </h1>
+        </div>
+    </div>
+    
+    <!-- Add Activity Form -->
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-plus"></i> ثبت فعالیت اجتماعی جدید
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control") }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.title.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="4") }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.description.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.amount_spent.label(class="form-label") }}
+                                    {{ form.amount_spent(class="form-control") }}
+                                    {% if form.amount_spent.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.amount_spent.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="form-check mt-4">
+                                        {{ form.is_published(class="form-check-input") }}
+                                        {{ form.is_published.label(class="form-check-label") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.document_file.label(class="form-label") }}
+                                    {{ form.document_file(class="form-control") }}
+                                    <small class="form-text text-muted">فایل‌های مجاز: PDF، تصاویر، Word</small>
+                                    {% if form.document_file.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.document_file.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form.image_file.label(class="form-label") }}
+                                    {{ form.image_file(class="form-control") }}
+                                    <small class="form-text text-muted">فایل‌های مجاز: JPG، PNG، GIF</small>
+                                    {% if form.image_file.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.image_file.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> ثبت فعالیت
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Card -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow bg-light">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i> راهنما
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="small mb-2">برای افزایش اعتماد کاربران:</p>
+                    <ul class="list-unstyled small">
+                        <li><i class="fas fa-check text-success"></i> عنوان واضح و مشخص</li>
+                        <li><i class="fas fa-check text-success"></i> شرح کامل فعالیت</li>
+                        <li><i class="fas fa-check text-success"></i> مدرک معتبر (رسید، فیش واریزی)</li>
+                        <li><i class="fas fa-check text-success"></i> تصاویر واقعی از فعالیت</li>
+                    </ul>
+                    <hr>
+                    <p class="small mb-0 text-muted">
+                        این فعالیت‌ها به عنوان شاهدی بر شفافیت سازمان شما عمل می‌کنند.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activities List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list text-primary"></i> لیست فعالیت‌های اجتماعی
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if activities %}
+                        <div class="row g-4">
+                            {% for activity in activities %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    {% if activity.image_file %}
+                                    <img src="{{ url_for('uploaded_file', filename=activity.image_file) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h6 class="card-title text-success">{{ activity.title }}</h6>
+                                        <p class="card-text small">{{ activity.description[:100] }}{% if activity.description|length > 100 %}...{% endif %}</p>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-info">{{ "{:,.0f}".format(activity.amount_spent) }} تومان</span>
+                                            {% if activity.is_published %}
+                                                <span class="badge bg-success">منتشر شده</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">پیش‌نویس</span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <small class="text-muted">{{ activity.created_at.strftime('%Y/%m/%d') }}</small>
+                                        
+                                        {% if activity.document_file %}
+                                        <div class="mt-2">
+                                            <a href="{{ url_for('uploaded_file', filename=activity.document_file) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-file-pdf"></i> مشاهده مدرک
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-heart fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">هنوز هیچ فعالیت اجتماعی ثبت نشده است</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

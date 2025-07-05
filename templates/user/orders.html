@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}سفارشات من - کافی‌نت مجازی{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6 fw-bold text-primary mb-4">
+                <i class="fas fa-shopping-cart"></i> سفارشات من
+            </h1>
+        </div>
+    </div>
+    
+    {% if orders %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>شماره سفارش</th>
+                                        <th>خدمت</th>
+                                        <th>مبلغ پایه</th>
+                                        <th>تخفیف</th>
+                                        <th>مبلغ پرداختی</th>
+                                        <th>وضعیت</th>
+                                        <th>تاریخ سفارش</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr>
+                                        <td>
+                                            <strong>#{{ order.id }}</strong>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <strong>{{ order.service.name }}</strong>
+                                                {% if order.service.category == 'administrative' %}
+                                                    <br><span class="badge bg-primary">اداری</span>
+                                                {% elif order.service.category == 'educational' %}
+                                                    <br><span class="badge bg-success">آموزشی</span>
+                                                {% elif order.service.category == 'financial' %}
+                                                    <br><span class="badge bg-warning">مالی</span>
+                                                {% elif order.service.category == 'inquiry' %}
+                                                    <br><span class="badge bg-info">استعلام</span>
+                                                {% else %}
+                                                    <br><span class="badge bg-secondary">سایر</span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>{{ "{:,.0f}".format(order.base_amount) }} تومان</td>
+                                        <td class="text-success">-{{ "{:,.0f}".format(order.discount_amount) }} تومان</td>
+                                        <td>
+                                            <strong class="text-success">{{ "{:,.0f}".format(order.final_amount) }} تومان</strong>
+                                        </td>
+                                        <td>
+                                            {% if order.status == 'pending' %}
+                                                <span class="badge bg-warning">در انتظار</span>
+                                            {% elif order.status == 'completed' %}
+                                                <span class="badge bg-success">تکمیل شده</span>
+                                            {% elif order.status == 'cancelled' %}
+                                                <span class="badge bg-danger">لغو شده</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ order.created_at.strftime('%Y/%m/%d %H:%M') }}</td>
+                                    </tr>
+                                    
+                                    <!-- Expandable Row for Details -->
+                                    <tr class="table-active">
+                                        <td colspan="7">
+                                            <div class="small text-muted">
+                                                <strong>تفکیک درآمد:</strong>
+                                                پورسانت معرف: {{ "{:,.0f}".format(order.referral_commission) }} تومان |
+                                                امور اجتماعی: {{ "{:,.0f}".format(order.social_fund) }} تومان |
+                                                تیم کافی‌نت: {{ "{:,.0f}".format(order.team_share) }} تومان
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary Card -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-pie"></i> خلاصه سفارشات
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% set total_base = orders|sum(attribute='base_amount') %}
+                        {% set total_discount = orders|sum(attribute='discount_amount') %}
+                        {% set total_paid = orders|sum(attribute='final_amount') %}
+                        
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h5 class="text-primary">{{ orders|length }}</h5>
+                                    <small class="text-muted">کل سفارشات</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h5 class="text-success">{{ "{:,.0f}".format(total_discount) }}</h5>
+                                    <small class="text-muted">کل تخفیف (تومان)</small>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="text-center">
+                                    <h4 class="text-success">{{ "{:,.0f}".format(total_paid) }} تومان</h4>
+                                    <small class="text-muted">کل مبلغ پرداختی</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">هیچ سفارشی ثبت نشده</h4>
+            <p class="text-muted">شما هنوز هیچ سفارشی ثبت نکرده‌اید.</p>
+            <a href="{{ url_for('user_services') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus"></i> سفارش جدید
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
